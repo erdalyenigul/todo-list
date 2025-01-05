@@ -7,7 +7,7 @@
         class=" bg-green-500 text-white px-3 py-1 rounded-lg flex items-center"
         :class="task.completed ? 'bg-green-500' : 'bg-red-500'"
       >
-        Status: {{ task.completed ? "Done" : "Waiting" }}
+        {{ task.completed ? "Completed" : "Incomplete" }}
       </span>
     </div>
     <div
@@ -29,36 +29,29 @@
         rows="3"
       ></textarea>
 
-      <div class="w-full flex justify-between">
-        <div class="mt-6 flex space-x-4">
-          <button
-            @click="saveEdit"
-            class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-          >
-            Save
-          </button>
-          <button
-            @click="cancelEdit"
-            class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-          >
-            Cancel
-          </button>
-        </div>
+      
+      <div class="flex w-full flex-col md:flex-row md:items-center mt-6 space-y-4 md:space-y-0 md:space-x-4">
+        <button
+          @click="saveEdit"
+          class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+        >
+          Save
+        </button>
+        <button
+          @click="cancelEdit"
+          class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+        >
+          Cancel
+        </button>
 
-        <div class="mt-6 flex space-x-4">
-          <button
-            @click="toggleTaskCompletion"
-            class="px-6 py-2 rounded-lg text-white"
-            :class="
-              task.completed
-                ? 'bg-blue-500 hover:bg-blue-600'
-                : 'bg-green-500 hover:bg-green-600'
-            "
-          >
-            {{ task.completed ? "Undo" : "Mark as Completed" }}
-          </button>
-        </div>
+        <button
+          @click="toggleTaskCompletion"
+          class="px-6 py-2 rounded-lg text-white bg-blue-500"
+        >
+        {{ task.completed ? "Mark as Incomplete" : "Mark as Completed" }}
+        </button>
       </div>
+      
     </div>
 
     <div v-else class="text-center text-gray-500">No tasks...</div>
