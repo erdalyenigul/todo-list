@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto text-center mt-20">
     <h1 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">
-      Erdal's ToDo List 🚀
+      2025 ToDo List 🚀
     </h1>
     <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
       Simple and efficient task management. Reach your goals faster!
@@ -36,7 +36,7 @@
         Why This App?
       </h2>
       <p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-        Erdal's ToDo List helps you organize your daily plans better. 
+        2025 ToDo List helps you organize your daily plans better. 
         With its simple and minimal design, you can boost your productivity 
         and manage your time more effectively.
       </p>
