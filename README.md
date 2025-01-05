@@ -15,17 +15,8 @@ Manage your daily tasks, track progress, and boost productivity.
 
 ---
 
-## 📸 Screenshots
-### Home Page (Landing)
-![Landing Screenshot](./public/images/landing.jpg)
-
-### Tasks Page
-![Tasks Screenshot](./public/images/tasks.jpg)
-
----
-
 ## 🚀 Live Demo
-Check out the live demo: [Erdal's ToDo List](https://your-live-demo-link.com)  
+Check out the live demo: [ToDo List](https://todo-list.vercel.app)  
 
 ---
 
@@ -34,7 +25,7 @@ Follow these steps to run the project locally:
 
 \`\`\`bash
 # Clone the repository
-git clone https://github.com/erdal-todo-list.git
+git clone https://github.com/erdalyenigul/todo-list
 
 # Navigate to the project directory
 cd erdal-todo-list
@@ -67,17 +58,7 @@ src/
 - **Vue 3** – Frontend JavaScript Framework  
 - **Vite** – Build Tool  
 - **Tailwind CSS** – CSS Framework  
-- **Pinia** – State Management  
 - **Vue Router** – Routing System  
-
----
-
-## 📌 Roadmap
-- [x] Basic task management (add, edit, delete)  
-- [x] Task completion and filtering  
-- [ ] Task categories (Work, Personal, etc.)  
-- [ ] Calendar integration  
-- [ ] Notifications and reminders  
 
 ---
 
@@ -104,13 +85,7 @@ This project is licensed under the **MIT License**.
 ---
 
 ## 🙋‍♂️ Contact
-- **Author:** Erdal Yenigül  
-- **LinkedIn:** [Erdal Yenigül](https://www.linkedin.com/in/erdal-yenigul/)  
-- **GitHub:** [erdal-dev](https://github.com/erdal-dev)  
+- **Author:** Erdal Yenigul  
+- **LinkedIn:** [Erdal Yenigul](https://www.linkedin.com/in/erdal-yenigul/)  
+- **GitHub:** [Erdal Yenigul](https://github.com/erdalyenigul)  
 """
-
-file_path = '/mnt/data/README.md'
-with open(file_path, 'w') as f:
-    f.write(readme_content)
-
-file_path
