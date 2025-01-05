@@ -28,7 +28,7 @@ Follow these steps to run the project locally:
 git clone https://github.com/erdalyenigul/todo-list
 
 #### Navigate to the project directory
-cd erdal-todo-list
+cd todo-list
 
 #### Install dependencies
 npm install
