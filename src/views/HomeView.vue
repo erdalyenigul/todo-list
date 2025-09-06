@@ -1,21 +1,20 @@
 <template>
   <div class="container mx-auto text-center mt-20">
-    <h1 class="text-2xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6">
-      2025 ToDo List 🚀
-    </h1>
     <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
-      Simple and efficient task management. Reach your goals faster!
+      2025 ToDo List helps you organize your daily plans better. <br> With its
+        simple and minimal design, you can boost your productivity and manage
+        your time more effectively.
     </p>
 
     <div class="flex justify-center space-x-6">
-      <button 
+      <button
         @click="goToTasks"
         class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-lg"
       >
         View Tasks
       </button>
 
-      <button 
+      <button
         @click="goToAddTask"
         class="px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 text-lg"
       >
@@ -24,35 +23,24 @@
     </div>
 
     <div class="mt-20">
-      <img 
+      <img
         src="https://images.pexels.com/photos/29996973/pexels-photo-29996973/free-photo-of-colorful-2025-planner-with-pen-and-plant.jpeg"
         alt="Productivity Image"
-        class="rounded-lg shadow-lg mx-auto w-full max-w-[600px]"
+        class="rounded-lg shadow-lg mx-auto w-full max-w-[400px]"
       />
-    </div>
-
-    <div class="mt-16">
-      <h2 class="text-3xl font-semibold text-gray-800 dark:text-white mb-4">
-        Why This App?
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-        2025 ToDo List helps you organize your daily plans better. 
-        With its simple and minimal design, you can boost your productivity 
-        and manage your time more effectively.
-      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const goToTasks = () => {
-  router.push('/tasks');
+  router.push("/tasks");
 };
 
 const goToAddTask = () => {
-  router.push('/new-task');
+  router.push("/new-task");
 };
 </script>
