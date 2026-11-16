@@ -5,6 +5,7 @@
 
     /* Linting */
     "strict": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,

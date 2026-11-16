@@ -1,101 +1,64 @@
-<template>
-  <div class="container mx-auto mt-10 max-w-[800px]">
-    <div class="flex justify-between items-center py-4">
-      <h1 class="text-xl font-bold">Task Edit</h1>
-      <span
-        v-if="task"
-        class=" bg-green-500 text-white px-3 py-1 rounded-lg flex items-center"
-        :class="task.completed ? 'bg-green-500' : 'bg-red-500'"
-      >
-        {{ task.completed ? "Completed" : "Incomplete" }}
-      </span>
-    </div>
-    <div
-      v-if="task"
-      class="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md border relative"
-    >
-      <label class="block mb-2 text-lg font-semibold">Title</label>
-      <input
-        v-model="editedTitle"
-        class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-      />
-
-      <label class="block mt-4 mb-2 text-lg font-semibold"
-        >Description</label
-      >
-      <textarea
-        v-model="editedDescription"
-        class="w-full px-4 py-2 border rounded-lg dark:bg-gray-700 dark:text-white"
-        rows="3"
-      ></textarea>
-
-      
-      <div class="flex w-full flex-col md:flex-row md:items-center mt-6 space-y-4 md:space-y-0 md:space-x-4">
-        <button
-          @click="saveEdit"
-          class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-        >
-          Save
-        </button>
-        <button
-          @click="cancelEdit"
-          class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-        >
-          Cancel
-        </button>
-
-        <button
-          @click="toggleTaskCompletion"
-          class="px-6 py-2 rounded-lg text-white bg-blue-500"
-        >
-        {{ task.completed ? "Mark as Incomplete" : "Mark as Completed" }}
-        </button>
-      </div>
-      
-    </div>
-
-    <div v-else class="text-center text-gray-500">No tasks...</div>
-  </div>
-</template>
-
-<script setup>
-import { ref, onMounted } from "vue";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getTasks, saveTasks } from "../utils/localStorage";
-
+import TaskForm from "../components/TaskForm.vue";
+import TaskDates from "../components/TaskDates.vue";
+import { getTask, updateTask } from "../services/tasks";
+import type { Task, TaskInput } from "../types/task";
 const route = useRoute();
 const router = useRouter();
-const task = ref(null);
-const editedTitle = ref("");
-const editedDescription = ref("");
-
-onMounted(() => {
-  const tasks = getTasks();
-  task.value = tasks.find((t) => t.id == route.params.id);
-  if (task.value) {
-    editedTitle.value = task.value.title;
-    editedDescription.value = task.value.description;
+const task = ref<Task | null>(null);
+const loading = ref(true);
+const busy = ref(false);
+const error = ref("");
+const loadError = ref("");
+async function load() {
+  loading.value = true;
+  loadError.value = "";
+  try {
+    task.value = await getTask(String(route.params.id));
+    if (task.value && String(route.params.id) !== task.value.id)
+      await router.replace(`/tasks/${task.value.id}`);
+  } catch (cause) {
+    loadError.value =
+      cause instanceof Error ? cause.message : "Madde yüklenemedi.";
+  } finally {
+    loading.value = false;
   }
-});
-const toggleTaskCompletion = () => {
-  task.value.completed = !task.value.completed;
-  const tasks = getTasks();
-  const index = tasks.findIndex((t) => t.id == task.value.id);
-  tasks[index] = task.value;
-  saveTasks(tasks);
-};
-const saveEdit = () => {
-  task.value.title = editedTitle.value;
-  task.value.description = editedDescription.value;
-
-  const tasks = getTasks();
-  const index = tasks.findIndex((t) => t.id == task.value.id);
-  tasks[index] = task.value;
-  saveTasks(tasks);
-
-  router.push("/tasks");
-};
-const cancelEdit = () => {
-  router.push("/tasks");
-};
+}
+onMounted(load);
+async function save(input: TaskInput) {
+  if (!task.value || busy.value) return;
+  busy.value = true;
+  error.value = "";
+  try {
+    task.value = await updateTask(task.value, input);
+    await router.push("/tasks");
+  } catch (cause) {
+    error.value = cause instanceof Error ? cause.message : "Kaydedilemedi.";
+  } finally {
+    busy.value = false;
+  }
+}
 </script>
+<template>
+  <section class="panel max-w-2xl mx-auto mt-10">
+    <h1 class="text-2xl font-bold mb-6">Maddeyi düzenle</h1>
+    <p v-if="loading" role="status">Yükleniyor…</p>
+    <div v-else-if="loadError">
+      <p role="alert" class="notice-error">{{ loadError }}</p>
+      <button type="button" class="button" @click="load">Tekrar dene</button>
+    </div>
+    <template v-else-if="task">
+      <TaskForm :initial="task" :busy="busy" :error="error" @save="save" />
+      <TaskDates :task="task" />
+    </template>
+    <p v-else>
+      Madde bulunamadı. Eski bir bağlantıysa önce bu tarayıcıdaki maddeleri
+      hesabınıza aktarın.
+    </p>
+    <RouterLink to="/tasks" class="inline-block mt-5 underline"
+      >Listeye dön</RouterLink
+    >
+  </section>
+</template>
