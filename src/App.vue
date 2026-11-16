@@ -1,67 +1,69 @@
+<script setup lang="ts">
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { session, username, signOut } from "./stores/auth";
+import LegacyImportBanner from "./components/LegacyImportBanner.vue";
+const router = useRouter();
+const route = useRoute();
+const error = ref("");
+const busy = ref(false);
+const revision = ref(0);
+watch(
+  () => session.value?.user.id,
+  (id, previous) => {
+    if (previous && id !== previous) void router.replace("/login");
+  },
+);
+async function logout() {
+  if (busy.value) return;
+  busy.value = true;
+  error.value = "";
+  try {
+    await signOut();
+    await router.replace("/login");
+  } catch (cause) {
+    error.value = cause instanceof Error ? cause.message : "Çıkış yapılamadı.";
+  } finally {
+    busy.value = false;
+  }
+}
+</script>
 <template>
-  <div class="min-h-screen flex flex-col justify-between bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white">
-    <header class="bg-blue-600 text-white p-2">
-      <div class="container mx-auto flex justify-between items-center">
-        <RouterLink to="/" class="px-4 py-2"><h1 class="text-2xl font-bold">ToDo List</h1></RouterLink>
-        
-        <nav class="hidden md:flex space-x-6">
-          <RouterLink to="/" class="px-4 py-2">Main</RouterLink>
-          <RouterLink to="/tasks" class="px-4 py-2">Tasks</RouterLink>
-          <RouterLink to="/new-task" class="px-4 py-2 bg-green-500 rounded-lg hover:bg-green-600">
-            New Task
-          </RouterLink>
-        </nav>
-
-        <div class="md:hidden">
-          <button @click="toggleMenu" class="focus:outline-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-8 h-8">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+  <div class="min-h-dvh bg-gray-900 text-white flex flex-col">
+    <header class="bg-blue-700">
+      <nav
+        class="container mx-auto flex flex-wrap items-center gap-3 p-4"
+        aria-label="Ana menü"
+      >
+        <RouterLink
+          :to="session ? '/tasks' : '/login'"
+          class="text-xl font-bold mr-auto"
+          >ToDo List</RouterLink
+        >
+        <template v-if="session">
+          <RouterLink to="/tasks" class="button">Maddelerim</RouterLink>
+          <span class="text-sm">{{ username }}</span>
+          <button
+            type="button"
+            class="button bg-blue-900"
+            :disabled="busy"
+            @click="logout"
+          >
+            Çıkış yap
           </button>
-        </div>
-      </div>
-
-      <div v-if="showMenu" class="md:hidden mt-4 bg-blue-700 p-4 rounded-lg">
-        <RouterLink 
-          to="/" 
-          class="block py-2 px-4 hover:bg-blue-800 rounded-lg"
-          @click="toggleMenu"
-        >
-          Ana Sayfa
-        </RouterLink>
-        <RouterLink 
-          to="/tasks" 
-          class="block py-2 px-4 hover:bg-blue-800 rounded-lg"
-          @click="toggleMenu"
-        >
-          Tasks
-        </RouterLink>
-        <RouterLink 
-          to="/new-task" 
-          class="block py-2 px-4 bg-green-500 rounded-lg hover:bg-green-600"
-          @click="toggleMenu"
-        >
-          Yeni Görev
-        </RouterLink>
-      </div>
+        </template>
+      </nav>
     </header>
-
-    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8">
-      <RouterView />
+    <main class="container mx-auto px-4 sm:px-6 flex-grow pb-10">
+      <p v-if="error" role="alert" class="notice-error mt-4">{{ error }}</p>
+      <template v-if="session">
+        <LegacyImportBanner :key="session.user.id" @imported="revision++" />
+        <RouterView :key="`${session.user.id}:${route.fullPath}:${revision}`" />
+      </template>
+      <RouterView v-else-if="route.name === 'Login'" />
     </main>
-
-    <footer class="bg-blue-700 text-white p-4 text-center mt-20">
-      <p>© 2025 ToDo List | <a href="https://github.com/erdalyenigul">Erdal Yenigul</a> </p>
+    <footer class="text-center text-gray-400 text-sm p-5">
+      ToDo List · Kişisel yapılacaklar listeniz
     </footer>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-
-const showMenu = ref(false);
-
-const toggleMenu = () => {
-  showMenu.value = !showMenu.value;
-};
-</script>
